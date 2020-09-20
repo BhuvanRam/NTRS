@@ -1,0 +1,59 @@
+/**
+ * moutheme: ContactForm javascript
+ * @license MIT
+ */
+ 
+/*******************
+ * Contact Form JavaScript
+********************/
+
+$(document).on("ready",function() {
+
+    $("#email-form [type='submit']").click(function(event) {
+        event.preventDefault();
+        //get input field values
+        var user_fname       = $('input[name=fname]').val()
+		var user_lname       = $('input[name=lname]').val()
+        var user_email      = $('input[name=email]').val()
+        var user_subject    = $('input[name=subject]').val()
+        var user_arphone    = $('input[name=arphone]').val()
+		var user_phone    = $('input[name=phone]').val()
+        var user_armobile    = $('input[name=armobile]').val()
+		var user_mobile    = $('input[name=mobile]').val()
+        var user_company    = $('input[name=company]').val()
+        var user_message    = $('textarea[name=message]').val()
+		var user_captcha    = $('input[name=captcha]').val()
+        var user_recaptcha    = $('input[name=recaptcha]').val()
+       
+        //data to be sent to server
+        post_data = {'userfName':user_fname,'userlName':user_lname, 'userEmail':user_email, 'userSubject':user_subject,'userarPhone':user_arphone,'userPhone':user_phone,'userarMobile':user_armobile,'userMobile':user_mobile,'userCompany':user_company, 'userMessage':user_message,'userCaptcha':user_captcha, 'userreCaptcha':user_recaptcha}
+       
+        //Ajax post data to server
+        $.post('contact_me.php', post_data, function(response){  
+           
+            //load json data from server and output message    
+            if(response.type == 'error') {
+
+                output = '<div class="error-message"><p class="from">'+response.text+'</p></div>'
+                
+            } else {
+           
+                output = '<div class="success-message"><p class="seuccses">'+response.text+'</p></div>'
+               
+                //reset values in all input fields
+                $('#email-form input').val('')
+                $('#email-form textarea').val('')
+            }
+           
+            $("#result").hide().html(output).slideDown()
+
+        }, 'json')
+
+    });
+   
+    //reset previously set border colors and hide all message on .keyup()
+    $("#email-form input, #email-form textarea").keyup(function() {
+        $("#result").slideUp()
+    })
+   
+});
